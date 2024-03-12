@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>Board Read</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Board Modify
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/board/modify}" method="post" id="f1">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Bno</span>
+                            <input type="text" class="form-control" th:value="${dto.bno}" name="bno" readonly>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Title</span>
+                            <input type="text" class="form-control" name="title" th:value="${dto.title}">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Content</span>
+                            <textarea class="form-control col-sm-5" rows="5" name="content">[[${dto.content}]]</textarea>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Writer</span>
+                            <input type="text" class="form-control" th:value="${dto.writer}" name="writer" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">RegDate</span>
+                            <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">ModDate</span>
+                            <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+                        </div>
+
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="button" class="btn btn-primary listBtn">List</button>
+                                <button type="button" class="btn btn-secondary modBtn">Modify</button>
+                                <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+                </div><!--end card body-->
+
+
+            </div><!--end card-->
+        </div><!-- end col-->
+    </div><!-- end row-->
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const errors = [[${errors}]]
+    console.log(errors)
+
+    let errorMsg = ''
+
+    if(errors){
+        for(let i = 0 ; i<errors.length;i++){
+            errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`
+        }
+        history.replaceState({}, null, null)
+        //history.replaceState 메서드는 현재 페이지의
+        //                     URL을 변경하지 않고 이전 페이지 기록을 변경하는 데 유용한 메서드입니다.
+        //history.replaceState 메서드를 호출하면 현재 페이지의 이전 페이지 기록이 새로운 state object, title, URL로 변경됩니다.
+        //URL 인수를 제외한 나머지 인수는 선택 사항이며, 생략해도 됩니다.
+        //URL 인수를 지정하지 않으면 현재 페이지의 URL이 사용됩니다.
+        alert(errorMsg)
+    }
+
+    const link = [[${pageRequestDTO.getLink()}]]
+    const formObj = document.querySelector("#f1")
+
+    document.querySelector(".modBtn").addEventListener("click", function (e){
+        e.preventDefault() //이벤트의 기본 동작 중지, 현재 이벤트에만 영향을 미칩니다.
+        e.stopPropagation() //이벤트 전파를 중단하는 데 사용됩니다.
+                            //이벤트는 DOM 트리에서 발생하여 상위 요소로 전파되는 특성을 가지고 있습니다
+
+        formObj.action = `/board/modify?${link}`
+        formObj.method = 'post'
+        formObj.submit()
+    }, false)
+
+    document.querySelector(".removeBtn").addEventListener("click",function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        formObj.action = `/board/remove`
+        formObj.method = 'post'
+        formObj.submit()
+    },false)
+
+        // 이벤트 버블링 및 캡처/버블 단계:
+        // 브라우저의 이벤트 처리 시스템에서 이벤트는 이벤트 버블링이라는 전파 메커니즘을 따릅니다.
+        // 이벤트가 요소에서 발생하면 먼저 해당 요소(대상 요소)에서 트리거됩니다.
+        // 그런 다음 DOM 트리를 위로 전파하여 모든 부모 요소에서 트리거되고 최종적으로 window 객체에 도달합니다.
+        // JavaScript는 이벤트 처리를 위한 두 가지 선택적 단계를 제공합니다.
+        // 캡처 및 버블입니다. 기본적으로 이벤트 리스너는 버블 단계에 연결됩니다.
+
+    //false를 사용하는 이유:세 번째 인수를 false로 설정하면 브라우저에게 이벤트 리스너를 캡처 단계에 연결하도록 명시적으로 지시합니다.
+    // 즉, 이벤트 핸들러는 이벤트가 부모 요소로 전파되기 전에 트리거됩니다.
+</script>
