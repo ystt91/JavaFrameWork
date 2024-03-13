@@ -57,7 +57,7 @@ public class Board extends BaseEntity {
     public void addImage(String uuid, String fileName){
         BoardImage boardImage = BoardImage.builder()
                 .uuid(uuid)
-                .fineName(fileName)
+                .fileName(fileName)
                 .board(this)
                 .ord(imageSet.size())
                 .build();

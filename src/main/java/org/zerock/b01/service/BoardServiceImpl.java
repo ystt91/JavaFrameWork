@@ -8,10 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zerock.b01.domain.Board;
-import org.zerock.b01.dto.BoardDTO;
-import org.zerock.b01.dto.BoardListReplyCountDTO;
-import org.zerock.b01.dto.PageRequestDTO;
-import org.zerock.b01.dto.PageResponseDTO;
+import org.zerock.b01.dto.*;
 import org.zerock.b01.repository.BoardRepository;
 
 import java.util.List;
@@ -31,8 +28,11 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public Long register(BoardDTO boardDTO) {
 
-        Board board = modelMapper.map(boardDTO, Board.class);
+        //Board board = modelMapper.map(boardDTO, Board.class);
                                     //무엇을   //뭘로 바꿀거니?
+
+        Board board = dtoToEntity(boardDTO);
+
         Long bno = boardRepository.save(board).getBno();
 
         return bno;
@@ -101,5 +101,10 @@ public class BoardServiceImpl implements BoardService{
                 .dtoList(result.getContent())
                 .total((int)result.getTotalElements())
                 .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
+        return null;
     }
 }
