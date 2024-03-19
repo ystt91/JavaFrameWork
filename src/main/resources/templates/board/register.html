@@ -35,7 +35,7 @@
                         </div>
                         <div class="my-4">
                             <div class="float-end">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
                                 <button type="reset" class="btn btn-secondary">Reset</button>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
     </div>
 
     <!-- 첨부파일 추가를 위한 모달창 -->
-    <div class="modal uploadModal" tabindex="-1">
+    <div class="modal uploadModal" tabindex="-1"> <!-- tabindex 주목-->
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -149,5 +149,47 @@
 
         uploadResult.innerHTML += str
     }
+
+    function removeFile(uuid, fileName, obj){
+        console.log(uuid)
+        console.log(fileName)
+        console.log(obj)
+
+        const targetDiv = obj.closest(".card")
+
+        removeFileToServer(uuid, fileName).then(data => {
+            targetDiv.remove()
+        })
+    }
+
+
+    document.querySelector(".submitBtn").addEventListener("click", function(e){
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = document.querySelector(".uploadHidden")
+
+        const uploadFiles = uploadResult.querySelectorAll("img")
+
+        let str = ''
+
+        for (let i = 0; i < uploadFiles.length ; i++) {
+            const uploadFile = uploadFiles[i]
+            const imgLink = uploadFile.getAttribute("data-src")
+
+            str += `<input type='hidden' name='fileNames' value="${imgLink}">`
+        }
+
+        target.innerHTML = str;
+
+        const formObj = document.querySelector("form");
+
+        formObj.submit();
+        formObj.reset();
+
+    }, false)
+
+
 
 </script>

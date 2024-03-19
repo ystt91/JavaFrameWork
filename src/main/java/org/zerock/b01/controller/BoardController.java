@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.b01.dto.BoardDTO;
-import org.zerock.b01.dto.BoardListReplyCountDTO;
-import org.zerock.b01.dto.PageRequestDTO;
-import org.zerock.b01.dto.PageResponseDTO;
+import org.zerock.b01.dto.*;
 import org.zerock.b01.service.BoardService;
 
 @Controller
@@ -28,7 +25,7 @@ public class BoardController {
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model){
         //PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
-        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
+        PageResponseDTO<BoardListAllDTO> responseDTO = boardService.listWithAll(pageRequestDTO);
 
         log.info(responseDTO);
 
@@ -39,24 +36,23 @@ public class BoardController {
     public void registerGET(){}
 
     @PostMapping("/register")
-    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult,
-                               RedirectAttributes redirectAttributes){
-        log.info("board POST register......");
+    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
 
-        if(bindingResult.hasErrors()){
-            log.info("has errors.....");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+        log.info("board POST register.......");
+
+        if(bindingResult.hasErrors()) {
+            log.info("has errors.......");
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
             return "redirect:/board/register";
         }
 
         log.info(boardDTO);
 
-        Long bno = boardService.register(boardDTO);
+        Long bno  = boardService.register(boardDTO);
 
         redirectAttributes.addFlashAttribute("result", bno);
 
         return "redirect:/board/list";
-
     }
 
     @GetMapping({"/read","/modify"})

@@ -36,6 +36,13 @@
                         </div>
 
                         <div class="input-group mb-3">
+                            <span class="input-group-text">Images</span>
+                            <div class="float-end uploadHidden">
+                                <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
                             <span class="input-group-text">RegDate</span>
                             <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
                         </div>
@@ -60,6 +67,48 @@
             </div><!--end card-->
         </div><!-- end col-->
     </div><!-- end row-->
+
+    <!-- 첨부 파일 섬네일을 보여줄 부분 -->
+    <div class="row mt-3">
+        <div class="col ">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">
+                <th:block th:each="fileName:${dto.fileNames}">
+                    <div class="card col-4" th:with = "arr = ${fileName.split('_')}">
+                        <div class="card-header d-flex justify-content-center">
+                            [[${arr[1]}]]
+                            <button class="btn-sm btn-danger"
+                                    th:onclick="removeFile([[${arr[0]}]], [[${arr[1]}]], this)">X</button>
+                        </div>
+                        <div class="card-body">
+                            <img th:src="|/view/small_${fileName}|" th:data-src="${fileName}" >
+                        </div>
+                    </div><!-- card -->
+                </th:block>
+            </div>
+        </div>
+    </div>
+
+    <!-- 첨부파일 추가를 위한 모달창 -->
+    <div class="modal uploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" name="files" class="form-control" multiple >
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+                    <button type="button" class="btn btn-outline-dark closeUploadBtn" >Close</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- register modal -->
+
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
@@ -113,4 +162,20 @@
 
     //false를 사용하는 이유:세 번째 인수를 false로 설정하면 브라우저에게 이벤트 리스너를 캡처 단계에 연결하도록 명시적으로 지시합니다.
     // 즉, 이벤트 핸들러는 이벤트가 부모 요소로 전파되기 전에 트리거됩니다.
+
+    const removeFileList = [];
+
+    function removeFile(uuid, fileName, obj){
+        if(!confirm("파일을 삭제하시겠습니까?")){
+            return
+        }
+
+        console.log(uuid)
+        console.log(fileName)
+        console.log(obj)
+
+        removeFileList.push({uuid, fileName})
+        const targetDiv = obj.closest(".card")
+        targetDiv.remove()
+    }
 </script>
