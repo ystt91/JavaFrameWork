@@ -20,7 +20,7 @@ public class UploadResultDTO {
     public String getLink(){
 
         if(img){
-            return "s_"+ uuid +"_"+fileName; //이미지인 경우 섬네일
+            return "small_"+ uuid +"_"+fileName; //이미지인 경우 섬네일
         }else {
             return uuid+"_"+fileName;
         }

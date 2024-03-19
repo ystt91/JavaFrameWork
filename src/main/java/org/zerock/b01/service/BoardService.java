@@ -22,7 +22,8 @@ public interface BoardService {
     PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 
     PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO);
-
+    
+    //DTO를 도메인으로 변경
     default Board dtoToEntity(BoardDTO boardDTO){
 
         Board board = Board.builder()
@@ -32,15 +33,16 @@ public interface BoardService {
                 .writer(boardDTO.getWriter())
                 .build();
 
-        if(boardDTO.getFileName() != null){
-            boardDTO.getFileName().forEach(fileName ->{
+        if(boardDTO.getFileNames() != null){
+            boardDTO.getFileNames().forEach(fileName ->{
                 String[] arr = fileName.split("_");
                 board.addImage(arr[0],arr[1]);
             });
         }
         return board;
     }
-
+    
+    //도메인을 DTO로 변경
     default BoardDTO entityToBoard(Board board){
         BoardDTO boardDTO = BoardDTO.builder()
                 .bno(board.getBno())
@@ -52,9 +54,11 @@ public interface BoardService {
         List<String> fileNames = board.getImageSet().stream().sorted().map(boardImage ->
                 boardImage.getUuid() + "_" + boardImage.getFileName()).collect(Collectors.toList());
 
-        boardDTO.setFileName(fileNames);
+        boardDTO.setFileNames(fileNames);
 
         return boardDTO;
 
     }
+
+
 }

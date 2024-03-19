@@ -32,6 +32,6 @@ public class BoardDTO {
 
     private LocalDateTime modDate;
 
-    private List<String> fileName;
+    private List<String> fileNames;
     //Board에서 Set<BoardImage> 타입으로 변환
 }

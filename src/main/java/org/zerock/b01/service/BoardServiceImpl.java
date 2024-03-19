@@ -41,13 +41,16 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public BoardDTO readOne(Long bno) {
-
-        Optional<Board> result = boardRepository.findById(bno);
+    
+        //BoardRepository의 @EntityGraph를 이용하는 findByWithImages 사용
+        Optional<Board> result = boardRepository.findByWithImages(bno);
 
         Board board = result.orElseThrow();
 
-        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
+        //BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
                                         //무엇을 //무엇으로 바꿀거니?
+        BoardDTO boardDTO = entityToBoard(board);
+
         return boardDTO;
     }
 
@@ -59,6 +62,17 @@ public class BoardServiceImpl implements BoardService{
         Board board = result.orElseThrow();
 
         board.change(boardDTO.getTitle(), boardDTO.getContent());
+
+        //첨부 파일 처리
+        board.clearImages();
+
+        if(boardDTO.getFileNames() != null){
+            for (String fileName : boardDTO.getFileNames()){
+                String[] arr = fileName.split("_");
+                //String[] arr = fileName.split("_",2);
+                board.addImage(arr[0],arr[1]);
+            }
+        }
 
         boardRepository.save(board);
 
@@ -105,6 +119,21 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
-        return null;
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<BoardListAllDTO> result = boardRepository.searchWithAll(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListAllDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int)result.getTotalElements())
+                .build();
     }
+
+
+
 }
+
+

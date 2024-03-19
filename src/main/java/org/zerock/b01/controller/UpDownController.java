@@ -120,7 +120,7 @@ public class UpDownController {
 
             //컨텐트 타입이 이미지이면 썸네일도 삭제해라
             if(contentType.startsWith("image")){
-                File thumbnailFile = new File(uploadPath + File.separator + "smal_" + fileName);
+                File thumbnailFile = new File(uploadPath + File.separator + "small_" + fileName);
                 thumbnailFile.delete();
             }
 
