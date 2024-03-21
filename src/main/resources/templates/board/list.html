@@ -53,6 +53,7 @@
                                     <span class="badge progress-bar-success" style="background-color: #0a53be">
                                         [[${dto.replyCount}]]
                                     </span>
+                                    <!-- image -->
                                     <div th:if="${dto.boardImages != null && dto.boardImages.size() > 0}">
                                         <img style="width:100px" th:each="boardImage:${dto.boardImages}"
                                                                  th:src="|/view/small_${boardImage.uuid}_${boardImage.fileName}|"

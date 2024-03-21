@@ -116,7 +116,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
         query.groupBy(board);
 
-        if((types != null && types.length>0)&& keyword != null){
+        if((types != null && types.length>0) && keyword != null){
             BooleanBuilder booleanBuilder = new BooleanBuilder();
 
             for(String type : types){
