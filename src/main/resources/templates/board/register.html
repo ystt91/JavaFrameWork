@@ -25,7 +25,8 @@
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text">WRITER</span>
-                            <input type="text" name="writer" class="form-control" placeholder="Writer">
+                            <input type="text" name="writer" class="form-control" placeholder="Writer"
+                                   th:value="${#authentication.principal.username}" readonly>
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text">Images</span>
@@ -82,6 +83,9 @@
 
 </div>
 <script layout:fragment="script" th:inline="javascript">
+
+    //타임리프 인증 정보 활용
+    const auth = [[${#authentication}]]
 
     /* 에러가 발생했을 때 */
     const errors = [[${errors}]]
