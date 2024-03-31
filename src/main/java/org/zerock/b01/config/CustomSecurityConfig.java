@@ -62,6 +62,11 @@ public class CustomSecurityConfig {
             httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(accessDeniedHandler());
         });
 
+        http.oauth2Login( httpSecurityOAuth2LoginConfigurer -> {
+            httpSecurityOAuth2LoginConfigurer.loginPage("/member/login");
+            //httpSecurityOAuth2LoginConfigurer.successHandler(authenticationSuccessHandler());
+        });
+
         return http.build();
     }
 
@@ -85,4 +90,9 @@ public class CustomSecurityConfig {
         return new Custom403Handler();
     }
 
+
+//    @Bean
+//    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+//        return new CustomSocialLoginSuccessHandler(passwordEncoder());
+//    }
 }
